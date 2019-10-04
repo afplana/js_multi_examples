@@ -1,25 +1,29 @@
+#!/usr/bin/env node
 
-var amqp = require('amqplib/callback_api');
-amqp.connect('amqp://localhost', function(err_0, connection){
+let amqp = require('amqplib/callback_api');
+amqp.connect('amqp://localhost', function (err_0, connection) {
     if (err_0) {
         throw err_0;
-      }
-      connection.createChannel(function(err_1, channel) {
-          if(err_1){
-              throw err_1
-          }
+    }
+    connection.createChannel(function (err_1, channel) {
+        if (err_1) {
+            throw err_1
+        }
 
-          let queue = "basic";
-          let text = "readline from some source and send";
-          
-          channel.assertQueue(queue, {
-              durable: false
-          });
+        let exchange = "topic.logs"
+        let args = process.argv.slice(2);
+        let key = (args.length > 0) ? args[0] : 'anonymus.info';
+        let text = args.slice(1).join(' ') || "readline from some source and send";
 
-          channel.sendToQueue(queue, Buffer.from(text));
-          console.log("[!] Sent %s", text);
-      });
-      setTimeout(function(){
-          connection.close();
-         process.exit(0);}, 500);
+        channel.assertExchange(exchange, 'topic', {
+            durable: false
+        });
+
+        channel.publish(exchange, key, Buffer.from(text));
+        console.log("[!] Sent -> %s", text);
+    });
+    setTimeout(function () {
+        connection.close();
+        process.exit(0);
+    }, 500);
 });
