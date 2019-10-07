@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-let amqp = require('amqplib/callback_api');
-amqp.connect('amqp://localhost', function (err_0, connection) {
+import {connect} from "amqplib/callback_api";
+
+connect('amqp://localhost', function (err_0, connection) {
     if (err_0) {
         throw err_0;
     }
@@ -10,7 +11,7 @@ amqp.connect('amqp://localhost', function (err_0, connection) {
             throw err_1
         }
 
-        let exchange = "topic.logs"
+        let exchange = "topic.logs";
         let args = process.argv.slice(2);
         let key = (args.length > 0) ? args[0] : 'anonymus.info';
         let text = args.slice(1).join(' ') || "readline from some source and send";
