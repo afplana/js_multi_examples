@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import {connect} from "amqplib/callback_api";
 
 let args = process.argv.slice(2);

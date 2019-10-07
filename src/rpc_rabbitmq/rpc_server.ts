@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-
-
 import {connect} from "amqplib/callback_api";
 
 connect('amqp://localhost', (err_0, connection) => {
@@ -13,7 +10,7 @@ connect('amqp://localhost', (err_0, connection) => {
             throw err_1;
         }
 
-        var queue = 'rpc_queue';
+        let queue = 'rpc_queue';
 
 
         channel.assertQueue(queue, { durable: false });
@@ -22,10 +19,10 @@ connect('amqp://localhost', (err_0, connection) => {
         console.log('[!] Awaiting RPC requests');
 
         channel.consume(queue,function replay(msg) {
-            var n = parseInt(msg.content.toString());
+            let n = parseInt(msg.content.toString());
             console.log('[!] fib(%d)', n);
 
-            var r = fibonacci(n);
+            let r = fibonacci(n);
 
             channel.sendToQueue(msg.properties.replyTo, Buffer.from(r.toString()), {
                 correlationId: msg.properties.correlationId

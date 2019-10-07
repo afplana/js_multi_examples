@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import {connect} from "amqplib/callback_api";
 
 connect('amqp://localhost', function (err_0, connection) {
